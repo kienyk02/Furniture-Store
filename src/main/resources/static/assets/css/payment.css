@@ -1,0 +1,102 @@
+.delivery-information{
+    padding:50px 20px 10px ;
+    width: 30%;
+    margin-left: 130px;
+}
+.delivery-information__info{
+    padding-left: 10px;
+}
+.delivery-information__heading{
+    font-size: 25px;
+    font-weight: 500;
+    color: var(--primary-color);
+    padding-bottom: 20px;
+}
+.delivery-information__info-span{
+    display: block;
+    width: 100%;
+    padding-left: 5px;
+    background-color: var(--primary-color);
+    opacity: 0.6;
+}
+.delivery-information__info-input{
+	width:100%;
+	height:30px;
+	outline:none;
+	padding:0 5px;
+}
+.delivery-informatio__edit{
+    margin-top: 20px;
+}
+/* payment */
+.orders{
+    /* background-color: rgb(172, 229, 172); */
+    margin-top: 50px;
+    width: 32%;
+}
+.orders__heading{
+    font-size: 25px;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+.orders-list{
+    list-style: none;
+    width: 100%;
+    padding: 10px 10px;
+    margin-top: 20px;
+    max-height: 450px;
+    overflow-y: scroll;
+}
+.orders-item{
+    border-bottom: 1px solid #e9e3e3;
+    margin-bottom: 5px;
+}
+.orders-link{
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+}
+.orders-link img{
+    width: 70px;
+    height: 70px;
+}
+.orders-info{
+    text-align: left;
+    padding: 0 5px;
+    flex:1;
+}
+.orders-info__name{
+    line-height: 19px;
+    color: #666;
+}
+.orders-info__price{
+    color: var(--primary-color);
+    font-weight: 500;
+}
+.orders-clear{
+    font-size: 25px;
+    color: rgb(216, 96, 96);
+}
+.orders-payment-type{
+    font-size: 18px;
+    color: #333;
+    margin: 10px 0 20px;
+    line-height: 35px;
+    text-transform: capitalize;
+}
+.orders-total{
+    width: 100%;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9e3e3;
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 20px;
+    text-align: center;
+}
+.orders-btnpay{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 35%;
+    width: 30%;
+}
+

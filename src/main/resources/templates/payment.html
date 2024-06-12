@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/payment.css">
+    <link rel="stylesheet" href="./assets/css/footer.css">
+    <title>Payment</title>
+</head>
+<body>
+    <div class="app">
+        <header th:replace="~{header.html :: header}"> </header>
+        <div class="container">
+            <div class="grid">
+                <div class="grid__row">
+                    <form style="margin-right:200px" th:object="${user}" action="/updateInfo" method="Get" class="delivery-information">
+	                    <div class="delivery-information__heading">
+	                        Thông tin nhận hàng
+	                    </div>
+	                    <div class="delivery-information__info">
+	                        <div class="delivery-information__info-contact">
+	                            <span class="delivery-information__info-span ">Liên Hệ</span> 
+	                            <input style="display:none" name="username" th:value="*{username}" class="delivery-information__info-input"/> 
+	                            <input style="display:none" name="password" th:value="*{password}" class="delivery-information__info-input"/> 
+	                            <span>Họ tên</span><br/>
+	                            <input name="ten" th:value="*{ten}" class="delivery-information__info-input"/> 
+	                            <span>Số điện thoại</span><br/>
+	                            <input name="sdt" th:value="*{sdt}" class="delivery-information__info-input"/> 
+	                            <p style="color:red"  th:if="${#fields.hasErrors('sdt')}" >Vui lòng cung cấp Số điện thoại!</p>         
+	                            <span>Email</span><br/>
+	                            <input name="email" th:value="*{email}" class="delivery-information__info-input"/>                        
+	                        </div>
+	                        <br/>
+	                        <div class="delivery-information__info-address">
+	                            <span  class="delivery-information__info-span ">Địa chỉ</span> 
+	                            <input name="diachi" th:value="*{diachi}" class="delivery-information__info-input"/>
+	                            <p style="color:red"  th:if="${#fields.hasErrors('diachi')}" >Vui lòng cung cấp Địa chỉ!</p>    
+	                        </div>
+	                        <div onclick="handleSubmitEditInfo()" class="delivery-informatio__edit btn btn--primary">
+	                            <i style="padding-right: 5px;" class="fa-solid fa-pen-to-square"></i>
+	                            Cập nhật
+	                        </div>
+	                    </div>
+                	</form>
+                    <div class="orders">
+                        <div class="orders__heading">Đơn hàng của bạn</div>
+                        <div th:if="${session.listCartOrder!=null}" class="orders-container">
+                            <ul class="orders-list">
+                                <li th:each="cart:${session.listCartOrder}" class="orders-item">
+                                    <a th:href="@{product-view?id={id} (id=${cart.product.id })}" class="orders-link">
+                                        <img th:src="'./assets/img/'+${cart.product.anh }" alt="">
+                                        <div class="orders-info">
+                                            <div th:text="${cart.product.ten }" class="orders-info__name"></div>
+                                            <div th:text="${cart.product.gia_moi }+'₫'"  class="orders-info__price"></div>
+                                            <div th:text="'Số lượng:'+ ${cart.so_luong }"  style="color:red"></div>
+                                        </div>
+                                    </a>
+                                <p style="color:red" th:if="${soldout==cart.id}" th:text="${soldoutmessage}"></p>
+                                </li>
+                            </ul>
+                            <div class="orders-payment-type">
+                                <div>
+                                    <input name="payment-style" type="radio"> <span>Thanh toán qua ngân hàng</span>
+                                </div>
+                                <div>
+                                    <input checked="true"  name="payment-style" type="radio"> <span>Thanh toán khi nhận hàng</span>
+                                </div>
+                            </div>
+                            <div th:text="'Tổng cộng: '+${session.tongtiencartorder }+' ₫'" class="orders-total"></div>
+                            <a href="handle-payment" th:if="${user.sdt!='' && user.diachi!='' }" class="orders-btnpay btn btn--primary">Thanh Toán</a>
+                            <div th:if="${user.sdt=='' || user.diachi=='' }" style="background-color:#999;cursor:default;opacity:1" class="orders-btnpay btn">Thanh Toán</div>
+                            <p th:if="${user.sdt=='' || user.diachi=='' }" style="color:red;text-align:center; font-size:15px" >Vui lòng cung cấp SĐT và Địa chỉ!</p>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <footer th:replace="~{footer.html :: footer}"> </footer>
+    </div>
+    <div class="contact-fixed">
+        <ul type="none">
+            <li> 
+                <div class="color-mode ">
+                    <div class="light-mode mode--active">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <div class="dark-mode ">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                </div>
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.facebook.com/profile.php?id=100013168653241"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-facebook_-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://zalo.me/0961016881"> 
+                    <img src="https://stc-zaloprofile.zdn.vn/pc/v1/images/zalo_sharelogo.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.youtube.com/channel/UCn5EIwdMcGC8JKgDP28xqIw"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="tel:0961016881"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/08_phone-128.png" alt="">  
+                </a> 
+            </li>
+            <li class="pagination-item comeback_navbar">
+                <a href="#" class="paginaiton-item__link">
+                    <i class="fa-solid fa-angle-up"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <modal th:replace="~{modal.html :: modal}"></modal>
+    <script>
+		function handleSubmitEditInfo(){
+			document.querySelector(".delivery-information").submit()
+		}
+    </script>
+    <script src="/assets/js/script.js"></script>
+</body>
+</html>

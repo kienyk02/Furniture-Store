@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+		<div th:fragment="header" class="header">
+            <div class="grid">
+                <!-- header navbar -->
+                <nav class="header__navbar">
+                    <ul class="header__navbar-list">
+                        <li class="header__navbar-item header__navbar-item--separate"><a href="home" class="header__navbar-item-link"><i style="margin-right: 5px;padding-bottom:2px" class="fa-solid fa-house"></i>Trang chủ</a></li>
+                        <li class="header__navbar-item">
+                            <span style="cursor: text; color: var(--white-color);">Kết nối</span>
+                            <a href="https://www.facebook.com/profile.php?id=100013168653241" class="header__navbar-icon-link"><i class="header__navbar-icon fa-brands fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/cngt0022/" class="header__navbar-icon-link"><i class="header__navbar-icon fa-brands fa-instagram"></i></a>
+                        </li>
+                    </ul>
+                    <ul class="header__navbar-list">
+                        <li th:if="${session.account==null}" class="header__navbar-item header__navbar-item-register header__navbar-item--strong header__navbar-item--separate">Đăng kí</li>
+                        <li th:if="${session.account==null}" class="header__navbar-item header__navbar-item-login header__navbar-item--strong">Đăng nhập</li>
+                        <li th:if="${session.account!=null}" class="header__navbar-item header__navbar-item--account">
+                            <img  src="./assets/img/logo.png" alt="" class="header__navbar-item--account__img">
+                            <span th:text="'Hi '+${session.account.ten=='' ? session.account.username:session.account.ten  }+'!'" class="header__navbar-item--account__name"></span>
+                            <ul class="header__navbar-item--account__list">
+                                <li class="header__navbar-item--account__item">
+                                    <a href="/address-receive" class="header__navbar-item--account__link">
+                                        Địa chỉ nhận hàng
+                                    </a>
+                                </li>
+                                <li class="header__navbar-item--account__item">
+                                    <a href="/order-view" class="header__navbar-item--account__link">
+                                        Đơn mua
+                                    </a>
+                                </li>
+                                <li th:if="${session.account.role==2 }" class="header__navbar-item--account__item">
+                                    <a target="_blank" href="./controlmode/" class="header__navbar-item--account__link">
+                                        Quản lý cửa hàng
+                                    </a>
+                                </li>
+                                <li class="header__navbar-item--account__item">
+                                    <a href="change-password" class="header__navbar-item--account__link">
+                                        Đổi mật khẩu
+                                    </a>
+                                </li>
+                                <li class="header__navbar-item--account__item">
+                                    <a style="color:red" href="logout" class="header__navbar-item--account__link">
+                                        Đăng xuất
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- header search -->
+                <div class="header-search">
+                    <div class="header__logo">
+                        <img width="60%" height="" src="./assets/img/logo.png" class="header__logo-img " alt="BÀN GHẾ GAMING | BÀN GHẾ GAME THỦ">
+                    </div>
+                    <div  class="category-android-switch">
+                    </div>
+                    <div class="header__search">
+                        <div class="header__search-input-wrap">
+                            <input th:value="${param.key}" placeholder="Nhập tên hoặc thông tin sản phẩm" class="header__search-input" type="text">                     
+                            <ul style="display:none" class="header__search-category">
+                                <li class="header__search-category-item">Ghế lamborghini</li>
+                                <li class="header__search-category-item">Ghế công thái tọc</li>
+                                <li class="header__search-category-item">Bàn chữ Z</li>
+                                <li class="header__search-category-item">Ghế Edra</li>
+                                <li class="header__search-category-item">Ghế Warrior</li>
+                            </ul>
+                            <div class="header__search-history">
+                                <h4>
+                                    Kết quả
+                                </h4>
+                                <ul type="none" class="header__search-history-list">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="header__search-clear">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                        <button class="header__search-btn">
+                            <i class="fa-solid fa-magnifying-glass"></i>                        
+                        </button>
+                    </div>
+                    <div class="header__cart">
+                        <div class="header__cart-wrapper">
+                            <i style="color: white;" class=" header__cart-icon fa-solid fa-cart-shopping"></i>
+                            <div th:text="${soluongcart!=null ? soluongcart:0 }" class="header__cart-number"></div>
+                            <div class="header__cart-content">
+                                <!-- không có sản phẩm -->
+                                <span th:if="${cartdata==null}" class="header__cart-none">Chưa có sản phẩm trong giỏ hàng</span>
+                                <!-- khi có sản phẩm -->
+                                <div th:if="${cartdata!=null}" style="display: block;"  class="header__cart-container">
+                                    <ul class="header__cart-list">
+										<li th:each="cart:${cartdata}" class="header__cart-item">
+											<a th:href="@{product-view?id={id} (id=${cart.product.id })}" class="header__cart-link">
+										    	<img th:src="'./assets/img/'+${cart.product.anh }" alt="">
+										    	<div class="header__cart-info">
+										    		<div th:text="${cart.product.ten }" class="header__cart-info__name"></div>
+										    		<div th:text="${cart.product.gia_moi }+'₫'" class="header__cart-info__price"></div>
+										    		<div th:text="'Số lượng:'+ ${cart.so_luong }"  style="color:red"></div>
+										    	</div>
+										    	<div class="header__cart-clear">
+										        	<i th:onclick="'handleClearCart('+${cart.id}+')'" class="fa-regular fa-circle-xmark"></i>
+										    	</div>
+											</a>
+										</li>
+                                    </ul>
+                                    <div th:text="'Tổng cộng: '+${tongtiencart }+' ₫'" class="header__cart-total"></div>
+                                    <div class="header__cart-btnpay btn btn--primary">
+                                        <a style="color: white; text-decoration:none;font-size:18px" href="/cart">Xem giỏ hàng</a>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

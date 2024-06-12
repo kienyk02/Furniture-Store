@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/customer_orders.css">
+    <link rel="stylesheet" href="./assets/css/footer.css">
+    <title>Customer Orders</title>
+</head>
+<body>
+    <div class="app">
+        <header th:replace="~{header.html :: header}"> </header>
+        <div class="container">
+            <div class="grid">
+            	<div class="order__heading">Đơn hàng của bạn</div>
+            	<div th:each="order:${orders}" class="order">
+            		<div style="display:flex;justify-content:space-between;font-size:22px">
+	            		<div style="display:flex;justify-content:flex-start">
+            				<a target="_blank" th:href="@{invoice?id={id} (id=${order.id})}" style="cursor:pointer; padding-right:10px; color:var(--primary-color);text-decoration:none">
+            					<i class="fa-solid fa-file-invoice"></i>
+            				</a>
+		            		<div class="order-info__status">Tổng tiền: 
+		            			<span style="color:#4ac35a;font-size:25px" th:text="${order.tong_tien}+'₫'"></span>
+		            		</div>
+            			</div>
+	            		<div class="order-info">
+	            			<div style="color:#4ac35a" th:text="${order.trang_thai}" class="order-info__status"></div>
+	            			<div th:if="${order.trang_thai=='Chờ xác nhận'}" th:onclick="'handleDeleteOrder('+${order.id}+')'" class="order-info__cancel">Hủy đơn</div>
+	            		</div>
+            		</div>
+                    <div class="order-products">
+                        <div  class="order-products-container">
+                        	<hr/>
+                            <ul  type="none" class="order-products-list">
+                                <li th:if="${order.id==ordersp.order.id}" th:each="ordersp:${ordersps}" class="order-products-item">
+                                    <a th:href="@{product-view?id={id} (id=${ordersp.product.id })}" class="order-products-link">
+                                        <img th:src="'/assets/img/'+${ordersp.product.anh }" alt="">
+                                        <div th:text="${ordersp.product.ten }" class="order-products-info__name"></div>
+                                        <div th:text="${ordersp.product.gia_moi }+'₫'"  class="order-products-info__price"></div>
+                                        <div th:text="'Số lượng:'+ ${ordersp.soluong }"  style="color:red" class="order-products-info__count"></div>
+                                        <div th:text="${order.date}" class="order-products-info__date"></div>                                
+                                    </a>
+                                </li>
+                            </ul>
+                            <hr/>
+                        </div>
+                    </div>                 
+            	</div>           	
+        	</div>
+        </div>
+        <footer th:replace="~{footer.html :: footer}"> </footer>
+    </div>
+    <div class="contact-fixed">
+        <ul type="none">
+            <li> 
+                <div class="color-mode ">
+                    <div class="light-mode mode--active">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <div class="dark-mode ">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                </div>
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.facebook.com/profile.php?id=100013168653241"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-facebook_-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://zalo.me/0961016881"> 
+                    <img src="https://stc-zaloprofile.zdn.vn/pc/v1/images/zalo_sharelogo.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.youtube.com/channel/UCn5EIwdMcGC8JKgDP28xqIw"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="tel:0961016881"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/08_phone-128.png" alt="">  
+                </a> 
+            </li>
+            <li class="pagination-item comeback_navbar">
+                <a href="#" class="paginaiton-item__link">
+                    <i class="fa-solid fa-angle-up"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <modal th:replace="~{modal.html :: modal}"></modal>
+    <script src="assets/js/script.js"></script>
+    <script>
+    	function handleDeleteOrder(idorder){
+    		Swal.fire({
+    			title: 'Bạn muốn hủy Order này?',
+    			icon: 'question',
+    			showCancelButton: true,
+    			confirmButtonColor: '#4ac35a',
+    			cancelButtonColor: '#d33',
+    			confirmButtonText: 'Đồng ý',
+    			cancelButtonText: 'Hủy bỏ'
+    		}).then((result) => {
+    	  		if (result.isConfirmed) {
+					fetch(`http://localhost:8080/deleteOrder?id=${idorder}`,
+        	  		{
+        	  			method:'delete',
+        	  			mode:'cors',
+        	  		}
+        			).then(()=>{
+						Swal.fire({
+					  		position: 'center',
+					  		width:450,
+					  		icon: 'success',
+					  		title: 'Thành công',
+					  		text:'Xóa Order thành công!',
+					  		showConfirmButton: false,
+					  		timer: 700
+				  		}).then(()=>location.reload())//reload để cập nhật dữ liệu mới  
+				 	})
+        			
+    	  		}
+    		})
+    	}
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="./assets/css/base.css">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/productview.css">
+    <link rel="stylesheet" href="./assets/css/footer.css">
+    <title>Product View</title>
+</head>
+<body>
+    <div class="app">
+    	<header th:replace="~{header.html :: header}"> </header>
+        <div class="container">
+            <div style="display: none;" class="id-product">id-7</div>
+            <div class="grid">
+                <div class="result hide"></div>
+                <div class="product-view">
+                    <div class="product-view__img">
+                        <img th:src="'./assets/img/'+${product.anh }" alt="">
+                    </div>
+                    <div class="product-view__info">                            
+                        <div th:text="${product.ten}" class="product-view__info-heading"></div>
+                        <p style="color:red" th:if="${product.so_luong<=product.da_ban}">Sản phẩm tạm hết hàng!</p>
+                        <div class="product-view__info-price">
+                            <span th:text="${product.gia_moi}+'₫'" class="product-view__info-curprice"></span>
+                            <span th:if="${product.gia_cu>0}" th:text="${product.gia_cu}+'₫'" class="product-view__info-oldprice"></span>
+                        </div>
+                        
+						<div th:if="${product.so_luong>product.da_ban}" class="buy-cart">
+                            <div class="buy-amount">
+                                <div class="buy-amount__button" onclick="handleMinus()"><i class="fa-solid fa-minus"></i></div>
+                                <input type="text" id="amount" value="1">
+                                <div class="buy-amount__button" onclick="handlePlus()"><i class="fa-sharp fa-solid fa-plus"></i></div>
+                            </div>
+                            <div th:if="${session.account}==null" onclick="openLoginForm()"  class="product-view__buy btn btn--primary"><i style="font-size: 22px; margin-right:5px" class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng</div>
+                            <div th:if="${session.account}!=null"  th:onclick="'addCarts('+${product.id}+')'"  class="product-view__buy btn btn--primary"><i style="font-size: 22px; margin-right:5px" class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng</div>
+                        </div>
+                        
+                        <div style="max-width:650px" class="product-view__charactor">
+                            <p style="border:none" th:utext="${product.info}" ></p>
+                        </div>
+                    </div>
+                </div> 
+                <div class="product-review">
+                    <div class="review-heading">Đánh giá</div>
+                    <div class="product-review__wrapper">
+                    	<span style="padding: 5px" class="product-item__stars">
+							<i style="font-size:20px " class="vote-star fa-solid fa-star active"></i>
+							<i style="font-size:20px " class="vote-star fa-solid fa-star active"></i>
+							<i style="font-size:20px " class="vote-star fa-solid fa-star active"></i>
+							<i style="font-size:20px " class="vote-star fa-solid fa-star active"></i>
+							<i style="font-size:20px " class="vote-star fa-solid fa-star active"></i>
+						</span>
+                        <textarea placeholder="Viết đánh giá ở đây..." class="form-comment" name="comment"  cols="45" rows="8" required="" ></textarea>
+                        <button th:if="${session.account}!=null" type="button" onclick="handleAddComment()" class="btn btn--primary btn--comment">Gửi</button>
+                        <button th:if="${session.account}==null" type="button" onclick="openLoginForm()" class="btn btn--primary btn--comment">Gửi</button>
+                        <div class="review-comment">
+                            <ul type="none" class="comment-list">                               
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+           
+        <footer th:replace="~{footer.html :: footer}"> </footer>
+    </div>
+    <div class="contact-fixed">
+        <ul type="none">
+            <li> 
+                <div class="color-mode ">
+                    <div class="light-mode mode--active">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <div class="dark-mode ">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                </div>
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.facebook.com/profile.php?id=100013168653241"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-facebook_-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://zalo.me/0961016881"> 
+                    <img src="https://stc-zaloprofile.zdn.vn/pc/v1/images/zalo_sharelogo.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.youtube.com/channel/UCn5EIwdMcGC8JKgDP28xqIw"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="tel:0961016881"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/08_phone-128.png" alt="">  
+                </a> 
+            </li>
+            <li class="pagination-item comeback_navbar">
+                <a href="#" class="paginaiton-item__link">
+                    <i class="fa-solid fa-angle-up"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <model th:replace="~{modal.html::modal}"></model>
+    <script src="./assets/js/script.js"></script>
+    <script src="./assets/js/product_view.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Controller</title>
+<link rel="icon" href="/assets/img/logo.png">
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/product-detail.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://cdn.tiny.cloud/1/oid16mpp3rb24by68eyky76x32p4splaeumoxm4ulyaae3uk/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+<body>
+	<form th:object="${product}" th:action="@{/controlmode/product/save/{id} (id=${product.id})}" enctype="multipart/form-data" th:method="${id}<1? Post:Put ">
+	<h1 class="form-heading"> Thông tin chi tiết sản phẩm </h1>
+	<div class="add-product">
+		<div class="add-product-info">
+			<div class="add-product-info__name">
+				<label for="name">Tên Sản Phẩm</label> 
+				<input autofocus type="text" th:field="*{ten}" id="name" >
+				<p style="color:red"  th:if="${#fields.hasErrors('ten')}" >Vui lòng cung cấp Tên sản phẩm!</p>
+			</div>
+			<div style="display:flex; justify-content:space-between">
+				<div class="add-product-info__type">
+					<label for="type">Loại Sản Phẩm</label> 
+					<select th:field="*{category.id}" id="type">
+						<option th:each="category:${categorys}"
+								th:selected="${product.category!=null && category.id==product.category.id ? true:false}"
+								th:value="${category.id}" 
+								th:text="${category.name}">
+						</option>
+					</select>										  	
+				</div>  
+				<div style="width:250px">
+					<label>Số lượng</label>
+					<input  type="number" th:field="*{so_luong}"/>
+					<p style="color:red"  th:if="${#fields.hasErrors('so_luong')}" >Số lượng phải lớn hơn 0!</p>
+				</div>
+			</div>
+			
+			<div  class="add-product-info__info">
+				<label for="info">Thông Tin Sản Phẩm</label>
+				<textarea placeholder="Thông tin sản phẩm" th:field="*{info}" id="editor" cols="30" rows="5">
+				</textarea>
+			</div>
+			
+			<div class="add-product-info__price">
+				<div class="add-product-info__price--new">
+					<label for="price--new">Giá Sản Phẩm</label> 
+					<input th:field="*{gia_moi}" type="number"  id="price--new">
+					<p style="color:red"  th:if="${#fields.hasErrors('gia_moi')}" >Giá phải lớn hơn 0!</p>
+				</div>
+				<div class="add-product-info__price--old">
+					<label for="price--old">Giá Trước Sale</label> 
+					<input th:field="*{gia_cu}" type="number"  id="price--old">
+				</div>
+			</div>
+
+		</div>
+		<div class="add-img-container">
+			<label class="preview-img" for="mypicture">
+				<img th:src="${product.anh!=null && product.anh!=''} ? '/assets/img/'+${product.anh}:'https://cdn-icons-png.flaticon.com/512/8017/8017414.png'" alt="">
+			</label>
+			<input type="file"  hidden name="img" id="mypicture" > Chọn ảnh cho sản phẩm
+			<input type="text" hidden name="anh" th:value="${product.anh}" />
+			<p style="color:red"  th:if="${#fields.hasErrors('anh')}" >Vui lòng thêm Ảnh cho sản phẩm!</p>
+		</div>
+	</div> 
+	<div class="add-product__button">
+		<a style="font-size:18px;color:red" th:href="@{/controlmode/}" class="btn add-product__button--cancel">Hủy</a> 
+		<input th:if="${id}<=0"  style="font-size:18px" type="submit" th:value="Thêm" class="btn btn--primary add-product__button--finish"/>
+		<input th:if="${id}>0"  style="font-size:18px" type="submit" value="Cập nhật" class="btn btn--primary add-product__button--finish"/>	
+	</div>
+	</form>
+	
+	<script>
+		var upload = document.querySelector("#mypicture")
+		upload.addEventListener("change",function(e) {
+			document.querySelector(".preview-img img").src = URL.createObjectURL(upload.files[0])
+			document.querySelector("input[name='anh']").value=upload.files[0].name
+		})
+	</script>
+	<script>
+        tinymce.init({
+        selector: "#editor",
+           
+         plugins: "searchreplace directionality visualblocks image link media codesample table charmap insertdatetime advlist lists wordcount help emoticons autosave",
+           
+         toolbar: "undo redo print spellcheckdialog formatpainter | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | alignleft aligncenter alignright alignjustify lineheight | checklist bullist numlist indent outdent | removeformat |  addcomment showcomments",
+         height: '250px',
+         tinycomments_mode: 'embedded',
+         
+              });
+      </script>
+
+</body>
+</html>

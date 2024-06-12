@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        height: 100vh;
+        display: flex;
+    }
+    .category-detail{
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+    }
+    input{
+        height: 30px;
+        width: 300px;
+        outline: none;
+        font-size: 20px;
+    }
+    h1{
+        color: rgb(74, 195, 90);
+    }
+</style>
+<body>
+    <div class="category-detail">
+        <h1>Thông tin Danh mục</h1>
+        <form th:object="${category}"  th:action="@{/controlmode/category/save/{id} (id=${category.id})}" th:method="${id}<1? Post:Put ">
+            <input th:field= "*{name}" type="text">
+            <p style="color:red"  th:if="${#fields.hasErrors('name')}" >Vui lòng cung cấp Tên danh mục!</p>
+            <input th:field= "*{describe}" type="text">
+            <input style="background-color:rgb(74, 195, 90); color:white; font-size:20px" type="submit" value="Cập nhật">
+        </form>
+    </div>
+</body>
+</html>

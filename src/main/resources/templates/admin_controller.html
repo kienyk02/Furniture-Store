@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Controller</title>
+    <link rel="icon" href="/assets/img/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/assets/css/base.css">
+	<link rel="stylesheet" href="/assets/css/admin_controller-furniture.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div th:if="${session.account.role==2}" class="container">
+        <div class="wrapper">
+            <div class="category">
+                <h1 class="category__heading"><i style="padding-right: 5px;" class="fa-solid fa-user-tie"></i>Bảng điều khiển</h1>
+                <ul class="category__list">
+                    <li class="category__item category__item--select">
+                        <i class="fa-brands fa-product-hunt"></i>
+                        Quản lý sản phẩm
+                    </li>
+                    <li class="category__item">
+                        <i class="fa-solid fa-cart-plus"></i>
+                        Quản lý đơn hàng
+                    </li>
+                    <li class="category__item">
+                        <i class="fa-solid fa-list"></i>
+                        Quản lý Danh mục
+                    </li>
+                    <li class="category__item">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        Biểu đồ thống kê
+                    </li>
+                </ul>
+            </div>
+            <div class="content">
+                <div class="content__navbar">
+                    <div class="auform">
+                        <div class="account">
+                            <img width="60%" height="" src="../assets/img/logo.png" class="header__logo-img " alt="BÀN GHẾ GAMING | BÀN GHẾ GAME THỦ">
+                            <span th:text="${session.account.ten}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex;" class="products">
+                    <a th:href="@{product/{id} (id=-1)}"  class="products__add btn btn--primary"><i style="padding-right: 5px;padding-bottom:2px;" class="fa-solid fa-plus"></i>Thêm Sản Phẩm</a>
+                    <table class="products__table">
+                        <thead>
+                            <th class="products__th-id">ID</th>
+                            <th class="products__th-img"> Ảnh</th>
+                            <th class="products__th-name">Tên</th>
+                            <th class="products__th-type">Loại</th>
+                            <th class="products__th-price">Giá</th>
+                            <th class="products__th-numbers">Số lượng</th>
+                            <th class="products__th-sale">Đã bán</th>
+                            <th class="products__th-status">Trạng thái</th>
+                            <th class="products__th-remove">Action</th>
+                        </thead>
+                        <tbody>
+                            <tr th:each="product:${products}">
+                                <td th:text="${product.id}"></td>
+                                <td><img th:src="'../assets/img/'+${product.anh}" alt=""></td>
+                                <td th:text="${product.ten}"></td>
+                                <td th:text="${product.category.name}"></td>
+                                <td th:text="${product.gia_moi}+'₫'"></td>
+                                <td th:text="${product.so_luong}"></td>
+                                <td th:text="${product.da_ban}"></td>
+                                <td th:text="${product.so_luong-product.da_ban>0 ? 'Còn hàng':'Hết hàng'}"></td>
+                                <td>
+                                    <a th:href="@{product/{id} (id=${product.id})}"><i class="products__view fa-solid fa-eye"></i></a>
+                                    <button style="border:none" th:onclick="'confirmDeleteProduct('+${product.id}+')'" ><i class="products__remove fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display: none;" class="orders">
+                    <div class="orders__heading">Danh sách đơn hàng</div>
+                    <table class="orders__table">
+                        <thead style="position:relative; z-index:1">
+                            <th class="orders__th-id">ID</th>
+                            <th class="orders__th-name">Khách hàng</th>
+                            <th class="orders__th-phone">Số điện thoại</th>
+                            <th class="orders__th-address">Địa chỉ</th>
+                            <th class="orders__th-price">Thành tiền</th>
+                            <th class="orders__th-time">Thời gian</th>
+                            <th class="orders__th-status">Trạng thái</th>
+                            <th class="orders__th-action">Hành động</th>
+                        </thead>
+                        <tbody>
+                            <tr style="height:55px" th:each="order:${orders}">
+                                <td th:text="${order.id}"></td>
+                                <td th:text="${order.user.ten}"></td>
+                                <td th:text="${order.user.sdt}"></td>
+                                <td th:text="${order.user.diachi}"></td>
+                                <td th:text="${order.tong_tien}+'₫'"></td>
+                                <td th:text="${order.date}"></td>
+                                <td th:text="${order.trang_thai}"></td>
+                                <td>
+                                    <i style="position:relative" class="orders__view fa-solid fa-eye">
+                                    	<div class="orders__view-detail">
+											<div class="order-products">
+						                        <div  class="order-products-container">
+						                        	<a target="_blank" th:href="@{/invoice?id={id} (id=${order.id})}" style="cursor:pointer; padding-right:10px; color:#4ac35a;text-decoration:none">
+            											<i style="color:#4ac35a" class="fa-solid fa-file-invoice"></i>
+            										</a>
+						                            <ul  type="none" class="order-products-list">
+						                                <li th:if="${order.id==ordersp.order.id}" th:each="ordersp:${ordersps}" class="order-products-item">
+						                                    <a th:href="@{/product-view?id={id} (id=${ordersp.product.id })}" class="order-products-link">
+						                                    	<img style="margin-left:10px" th:src="'/assets/img/'+${ordersp.product.anh }" alt="">
+						                                        <div th:text="${ordersp.product.ten }" class="order-products-info__name"></div>
+						                                        <div th:text="${ordersp.product.category.name}" class="order-products-info__category"></div>                                
+						                                        <div th:text="${ordersp.product.gia_moi }+'₫'"  class="order-products-info__price"></div>
+						                                        <div th:text="'Số lượng:'+ ${ordersp.soluong }"  style="color:red" class="order-products-info__count"></div>
+						                                    </a>
+						                                </li>
+						                            </ul>
+						                        </div>
+                    						</div> 
+                                        </div>
+                                    </i>
+                                    <i th:if="${order.trang_thai!='Hoàn thành'}" style="position:relative" class="orders__edit orders__edit-active fa-solid fa-pen-to-square">
+                                    	<div class="orders__edit-options">
+                                    		<div style="padding-top:10px;color:var(--primary-color)">Thay đổi trạng thái</div>
+                                    		<div style="padding-right:5px">
+                                    			<a th:href="@{/updateOrder/{id}?tt=1 (id=${order.id})}">Chờ xác nhận</a>
+                                    			<a th:href="@{/updateOrder/{id}?tt=2 (id=${order.id})}">Đã xác nhận</a>
+                                    			<a th:href="@{/updateOrder/{id}?tt=3 (id=${order.id})}">Đang giao hàng</a>
+                                    			<a th:href="@{/updateOrder/{id}?tt=4 (id=${order.id})}">Hoàn thành</a>
+                                    		</div>
+                                    	</div>
+                                    </i>
+                                    <i th:if="${order.trang_thai=='Hoàn thành'}" style="background-color: #666;cursor:default" class="orders__edit fa-solid fa-pen-to-square"></i>
+                                    <i th:onclick="'handleDeleteOrder('+${order.id}+')'" class="orders__remove fa-solid fa-trash"></i>
+                                </td>
+                            </tr>      
+                                
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display: none;" class="category_manager">
+                    <a th:href="@{category/{id} (id=-1)}"  class="category__add btn btn--primary"><i style="padding-right: 5px;padding-bottom:2px;" class="fa-solid fa-plus"></i>Thêm Danh mục</a>
+                    <table class="categories__table">
+                        <thead>
+                            <th class="categories__th-id">ID</th>
+                            <th class="categories__th-name"> Tên</th>
+                            <th class="categories__th-describe">Mô tả</th>
+                            <th class="categories__th-action">Action</th>
+                        </thead>
+                        <tbody>
+                            <tr th:each="category:${categorys}">
+                                <td th:text="${category.id}"></td>
+                                <td th:text="${category.name}"></td>
+                                <td th:text="${category.describe}"></td>
+                                <td>
+                                    <a th:href="@{category/{id} (id=${category.id})}"><i class="categories__view fa-solid fa-eye"></i></a>
+                                    <button style="border:none" th:onclick="'confirmDeleteCategory('+${category.id}+')'" ><i class="categories__remove fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display: none;" class="pie-chart">
+                	<div id="piechart_3d" style="width: 100%; height: 500px;"></div>
+                	<div id="chart_div"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="color:red; text-align:center" th:if="${session.account.role!=2}">Đề nghị đăng nhập với quyền ADMIN!</div>
+    <script src="../assets/js/admin_controller.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="../assets/js/chart.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/footer.css">
+    <title>Cart</title>
+</head>
+<style>
+	.carts{
+	    /* background-color: rgb(172, 229, 172); */
+	    padding: 50px 80px;
+	    width: 100%;
+	}
+	.carts__heading{
+	    font-size: 25px;
+	    color: var(--primary-color);
+	    font-weight: 500;
+	    padding-bottom:20px;
+	}
+	.carts-item{
+		padding:15px 0px;
+		border-top:1px solid #333;
+	}
+	.carts-item:last-child{
+		border-bottom:1px solid #333;
+	}
+	.carts-link{
+		display:flex;
+		justify-content: space-between;
+    	text-decoration: none;
+    	color:#333;
+    	align-items:center;
+    	text-align:center;
+    	font-size:20px;
+	}
+	.carts-link input,.selectAll{
+		margin-right:50px;
+		transform: scale(1.6);
+		accent-color: var(--primary-color);
+		cursor:pointer;
+	}
+	.carts-link img{
+	    width: 100px;
+	    height: 100px;
+	    margin-right:50px;
+	}
+	.orders-info__price{
+		color: var(--primary-color);
+		flex:1;
+	}
+	.orders-info__name{
+		flex:1.5;
+	}
+	.orders-clear{
+		flex:1;
+	}
+	.orders-info__count{
+		flex:1;
+	}
+	.btn-payment{
+		margin-left:75%;
+		margin-top:50px;
+	}
+</style>
+<body>
+    <div class="app">
+        <header th:replace="~{header.html :: header}"> </header>
+        <div class="container">
+            <div class="grid">
+                <form action="/payment" method="post">
+                    <div class="carts">
+                        <div class="carts__heading">Giỏ hàng của bạn</div>
+                        <div  class="carts-container"> 
+                        	<input class="selectAll"  type="checkbox" /><span style="font-size:20px; color:var(--primary-color)">Tất cả</span>
+                            <ul type="none" class="carts-list">
+                                <li th:each="cart:${cartdata}" class="carts-item">
+                                    <a th:href="@{product-view?id={id} (id=${cart.product.id })}" class="carts-link">
+                                    	<input name="ordercart" th:value="${cart.id}" type="checkbox" />
+                                        <img th:src="'/assets/img/'+${cart.product.anh }" alt="">
+                                        <div th:text="${cart.product.ten }" class="orders-info__name"></div>
+                                        <div th:text="${cart.product.gia_moi }+'₫'"  class="orders-info__price"></div>
+                                        <div th:text="'Số lượng:'+ ${cart.so_luong }"  style="color:red" class="orders-info__count"></div>
+                                        <div class="orders-clear">
+                                            <i style="color: rgb(216, 96, 96);" th:onclick="'handleClearCart('+${cart.id}+')'" class="fa-regular fa-circle-xmark"></i>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <input type="submit" value="Thanh toán" class="btn-payment btn btn--primary"/>
+                        </div>
+                    </div> 
+                </form>
+            </div>
+        </div>
+        <footer th:replace="~{footer.html :: footer}"> </footer>
+    </div>
+    <div class="contact-fixed">
+        <ul type="none">
+            <li> 
+                <div class="color-mode ">
+                    <div class="light-mode mode--active">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <div class="dark-mode ">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                </div>
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.facebook.com/profile.php?id=100013168653241"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-facebook_-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://zalo.me/0961016881"> 
+                    <img src="https://stc-zaloprofile.zdn.vn/pc/v1/images/zalo_sharelogo.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.youtube.com/channel/UCn5EIwdMcGC8JKgDP28xqIw"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="tel:0961016881"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/08_phone-128.png" alt="">  
+                </a> 
+            </li>
+            <li class="pagination-item comeback_navbar">
+                <a href="#" class="paginaiton-item__link">
+                    <i class="fa-solid fa-angle-up"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <modal th:replace="~{modal.html :: modal}"></modal>
+    <script src="/assets/js/script.js"></script>
+    <script>
+    	document.querySelector(".selectAll").addEventListener('change',()=>{
+    		if(document.querySelector(".selectAll").checked==true){
+    			document.querySelectorAll(".carts-link input").forEach((input)=>{
+    				input.checked=true
+    			})
+    		}else{
+    			document.querySelectorAll(".carts-link input").forEach((input)=>{
+    				input.checked=false
+    			})
+    		}
+    	})
+    </script>
+</body>
+</html>

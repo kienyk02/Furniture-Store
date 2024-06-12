@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Invoice</title>
+    <link rel="icon" href="./assets/img/logo.png">
+    <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+    <link rel="stylesheet" href="./assets/css/invoice.css" media="all" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+  <body>
+    <div style="font-size:25px;cursor:pointer" onclick="generateToPDF()"><i class="fa-solid fa-download"></i></div>
+    <div id="content">
+      <header class="clearfix">
+        <div id="logo">
+          <img src="./assets/img/logo.png">
+        </div>
+        <div id="company">
+          <h2 class="name">LVK Store</h2>
+          <div>Yên Thường,Gia Lâm, Hà Nội, VN</div>
+          <div>0961016881</div>
+          <div><a href="mailto:levankienyk02@gmail.com">levankienyk02@gmail.com</a></div>
+        </div>
+        
+      </header>
+      <main>
+        <div id="details" class="clearfix">
+          <div id="client">
+            <div class="to">INVOICE TO:</div>
+            <h2 th:text="${order.user.ten}" class="name"></h2>
+            <div th:text="${order.user.sdt}" class="phone"></div>
+            <div th:text="${order.user.diachi}" class="address"></div>
+            <div class="email"><a th:text="${order.user.email}" th:href="'mailto:'+${order.user.email}"></a></div>
+          </div>
+          <div id="invoice">
+            <h1 th:text="'INVOICE '+${order.id}"></h1>
+            <div th:text="'Date of Invoice: '+${order.date}" class="date"></div>
+          </div>
+        </div>
+        <table border="0" cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="no">#</th>
+              <th class="desc">Name</th>
+              <th class="unit">Price</th>
+              <th class="qty">QUANTITY</th>
+              <th class="total">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="ordersp,index:${ordersps}">
+              <td style="text-align:center" th:text="${index.index+1}" class="no"></td>
+              <td class="desc"><h3 th:text="${ordersp.product.ten}"></h3></td>
+              <td class="unit" th:text="${ordersp.product.gia_moi}+'₫'"></td>
+              <td class="qty" th:text="${ordersp.soluong}"></td>
+              <td class="total" th:text="${ordersp.soluong*ordersp.product.gia_moi}+'₫'"></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2"></td>
+              <td colspan="2">SUBTOTAL</td>
+              <td th:text="${tongtien}+'₫'"></td>
+            </tr>
+            <tr>
+              <td colspan="2"></td>
+              <td colspan="2">TAX 0%</td>
+              <td>0₫</td>
+            </tr>
+            <tr>
+              <td colspan="2"></td>
+              <td colspan="2">GRAND TOTAL</td>
+              <td th:text="${tongtien}+'₫'"></td>
+            </tr>
+          </tfoot>
+        </table>
+        <div id="thanks">Thank you!</div>
+      </main> 
+    </div>
+  </body>
+  <script>
+    function generateToPDF(){
+      var element = document.querySelector("#content");
+      var opt = {
+        margin:       0,
+        filename:     'invoice.pdf',
+        image:        { type: 'png', quality: 1 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'a3'},
+      };
+    // New Promise-based usage:
+    html2pdf().set(opt).from(element).save();
+  }
+  </script>
+</html>

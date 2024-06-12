@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LVK Shop</title>
+    <link rel="icon" href="./assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel='stylesheet' href='https://cdn.rawgit.com/t4t5/sweetalert/v0.2.0/lib/sweet-alert.css'>
+	<script src='https://cdn.rawgit.com/t4t5/sweetalert/v0.2.0/lib/sweet-alert.min.js'></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="./assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/slide-show.css">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/footer.css">
+</head>
+<body>
+    <div class="app">
+    	<header th:replace="~{header.html :: header}"> </header>
+        <div class="container">
+            <div class="grid">
+                <div class="banner">
+                    <div class="slideshow-container">
+                        <div class="sildeshow-logo">
+                            <img width="100%" height="100%" src="./assets/img/logo.png" alt="">
+                        </div>
+                        <div class="slideshow-main">
+                            <div class="img-feature">
+                            </div>
+                            <div class="control prev"><i class="fa-solid fa-angle-left"></i></div>
+                            <div class="control next"><i class="fa-solid fa-angle-right"></i></div>
+                        </div>
+                        <div class="slideshow-list-img">            
+                        </div>
+                    </div>
+                    <div class="banner-news">
+                        <img src="https://cdn.mos.cms.futurecdn.net/UHtKGg7rxCoE3yoZpJakja.jpg" alt="">
+                    </div>
+                </div>
+                <div class="grid__row container-content">
+                    <div class="grid__column-2">
+                        <div class="category-wrapper">
+                            <div class="category">
+                                <h3 class="category-heading">
+                                    <div class="category-heading__humber"></div>
+                                    <span>Danh mục sản phẩm</span>
+                                </h3>
+                                <ul class="category-list">
+                                	<li th:class="'category-item '+${cur_ct==0 ? 'category-item--active':''}">
+	                                	<a href="home?cid=0" class="category-item__link">Tất cả</a>
+	                                </li>
+                                    <li th:each="c:${ctdata}" th:class="'category-item '+${c.id==cur_ct ? 'category-item--active':''}">
+                                        <a th:href="@{home?cid={cid} (cid=${c.id })}" th:text="${c.name}" class="category-item__link "></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div  class="category-news">
+                                <img style="position:absolute;width:18%;top:5px;left:-23px;" src="./assets/img/new.png" alt="">
+                                <h3 class="category-heading">
+                                    <span>Tin tức mới</span>
+                                </h3>
+                                <div class="category-news__container">
+                                    <ul class="category-news_list">
+                                        <li class="category-news_item">
+                                            <img src="./assets/img/discount.png" alt="">
+                                            <div>Giảm giá 10% mọi mặt hàng từ ngày 25/2/2023</div>
+                                        </li>
+                                    </ul>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="grid__column-8">
+                        <div class="category-filter">
+                            <span class="category-filter__title">Sắp xếp theo</span>
+                            <a th:href="@{home?cid={cid}&order=new (cid=${cur_ct})}"  th:class="'category-filter-btn btn '+${order=='new' ? 'btn--primary':''}">Mới nhất</a>
+                            <a th:href="@{home?cid={cid}&order=discount(cid=${cur_ct})}"  th:class="'category-filter-btn btn '+${order=='discount' ? 'btn--primary':''}">Giảm giá</a>
+                            <a th:href="@{home?cid={cid}&order=sales (cid=${cur_ct})}"  th:class="'category-filter-btn btn '+${order=='sales' ? 'btn--primary':''}">Bán chạy</a>
+                            <div class="category-select">
+                                <span th:style="${order_price!=null}? 'color:var(--primary-color)':''" 
+                                th:text="${order_price==null ? 'Giá':order_price=='asc'? 'Giá: Thấp đến Cao':'Giá: Cao đến Thấp'}" 
+                                class="category-select__title">
+                                </span>
+                                <i class="fa-solid fa-angle-down"></i>
+                                <ul class="category-select__list">
+                                    <li><a class="category-select__item" th:href="@{home?cid={cid}&orderPrice=asc (cid=${cur_ct})}">Giá: Thấp đến Cao</a></li>
+                                    <li><a class="category-select__item" th:href="@{home?cid={cid}&orderPrice=desc (cid=${cur_ct})}">Giá: Cao đến Thấp</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid__row grid-product">  
+                        	<div th:each="p:${listP}" th:class="'grid__column-product id-'+${p.id }">
+							        <div class="product-item">
+							            <a th:href="@{product-view?id={id} (id= ${p.id })}" class="product-item__link">
+							                <div class="product-item__img">
+							                    <img height="100%" width="100%" th:src="'./assets/img/'+${p.anh }" alt="">
+							                </div>
+							                <div th:text="${p.ten }" class="product-item__name"></div> 
+							                <div class="product-item__price">
+							                    <span th:text="${p.gia_moi }+'₫'" class="product-item__price-current"></span>
+							                    <span th:if="${p.gia_cu>0}" th:text="${p.gia_cu }+'₫'" class="product-item__price-old"> 
+												</span>
+							                </div>
+							            </a>
+							            <div class="product-item__vote">
+							                <span class="product-item__heart">
+							                    <i th:style="${p.yeu_thich==1? 'color:red':''}" th:class="${p.yeu_thich==1? 'fa-solid':'fa-regular'} + ' fa-heart'"></i>
+							                </span>
+							                <span class="product-item__stars">
+							                    <i style="color: #bbb9b9; font-size:12px " class="fa-solid fa-star"></i>
+							                    <i style="color: #bbb9b9; font-size:12px" class="fa-solid fa-star"></i>
+							                    <i style="color: #bbb9b9; font-size:12px" class="fa-solid fa-star"></i>
+							                    <i style="color: #bbb9b9; font-size:12px" class="fa-solid fa-star"></i>
+							                    <i style="color: #bbb9b9; font-size:12px" class="fa-solid fa-star"></i>
+							                </span>
+							            </div>
+							           	<div th:if="${session.account==null && p.so_luong>p.da_ban}" onclick="openLoginForm()"  class="btn btn--primary product-item__buy">CHỌN MUA</div>
+							            <div th:if="${session.account!=null && p.so_luong>p.da_ban}" th:onclick="'addCart('+${p.id}+',1)'"  class="btn btn--primary product-item__buy">CHỌN MUA</div>
+							            <div th:if="${p.so_luong<=p.da_ban}"  class="btn product-item__buy">HẾT HÀNG</div>
+							            <span th:text="'Đã bán ' + ${p.da_ban }" class="product-item__sales"></span>
+								        <div th:if="${p.yeu_thich==1 }"  class="product-item__favorite">Yêu thích</div>							            	
+								        <div th:if="${p.gia_cu>p.gia_moi }" class="product-item__discount">
+								        	<div th:text="'Giảm ' + ${(p.gia_cu-p.gia_moi)*100/p.gia_cu} +'%'"></div>
+								        </div> 
+							        </div>           
+							</div>            
+                        </div>
+                        <ul th:if="${pageNumber}>0" class="pagination">
+                            <li th:if="${pageIndex>1}" class="pagination-item">
+                                <a th:href="${curUrl}+'&page='+${pageIndex-1}" class="paginaiton-item__link">
+                                    <i class="fa-solid fa-angle-left"></i>
+                                </a>
+                            </li>
+                            <li th:each="pIndex : ${#numbers.sequence(1,pageNumber)}" 
+                            th:class="'pagination-item '+${pIndex==pageIndex ? 'btn--primary':''}">
+                                <a th:text="${pIndex}" th:href="${curUrl}+'&page='+${pIndex}" class="paginaiton-item__link">      
+                                </a>
+                            </li>
+                            <li th:if="${pageIndex<pageNumber}" class="pagination-item">
+                                <a  th:href="${curUrl}+'&page='+${pageIndex+1}" class="paginaiton-item__link">
+                                    <i class="fa-solid fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul th:if="${pageNumber}==0" class="pagination"
+                        style="font-size:20px; color:var(--primary-color)">
+                        	Sản phẩm bạn tìm không có trong cửa hàng!
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer th:replace="~{footer.html :: footer}"> </footer>
+    </div>
+    <div class="contact-fixed">
+        <ul type="none">
+            <li> 
+                <div class="color-mode ">
+                    <div class="light-mode mode--active">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <div class="dark-mode ">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                </div>
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.facebook.com/profile.php?id=100013168653241"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-facebook_-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://zalo.me/0961016881"> 
+                    <img src="https://stc-zaloprofile.zdn.vn/pc/v1/images/zalo_sharelogo.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="https://www.youtube.com/channel/UCn5EIwdMcGC8JKgDP28xqIw"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-128.png" alt="">  
+                </a> 
+            </li>
+            <li> 
+                <a target="_blank" href="tel:0961016881"> 
+                    <img src="https://cdn1.iconfinder.com/data/icons/basic-ui-elements-color/700/08_phone-128.png" alt="">  
+                </a> 
+            </li>
+            <li class="pagination-item comeback_navbar">
+                <a href="#" class="paginaiton-item__link">
+                    <i class="fa-solid fa-angle-up"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+	<modal th:replace="~{modal.html :: modal}"></modal>
+    <script src="./assets/js/script.js"></script>
+    <script src="./assets/js/slide-show.js"></script>
+</body>
+</html>

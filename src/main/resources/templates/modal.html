@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+    <div th:fragment="modal" th:class="'modal '+${errorloginVal!=null || errorregisterVal!=null || errorlogin!=null || errorregister!=null || successregister!=null ? 'open':''} ">
+        <div class="modal__body">
+            <!-- đăng kí -->
+            <div th:class="'auth-form  auth-form--register '+${errorregisterVal!=null || errorregister!=null || successregister!=null ? 'open':''}">
+                <div class="auth-form__container">
+                    <div class="auth-form__header">
+                        <h3 class="auth-form__heading">
+                            Đăng kí
+                        </h3>
+                        <span class="auth-form__switch-btn">
+                            Đăng nhập
+                        </span>
+                    </div>
+
+                    <form th:object="${user}"  action="register" method="post" class="auth-form__form">
+                        <div class="auth-form__group">
+                            <label for="" class="auth-form__label">Tên Đăng Nhập</label>
+                            <input name="username"  type="text" th:value="${user.username}" class="auth-form__input">
+                            <p style="color:red"  th:if="${#fields.hasErrors('username')}" >Không được để trống Username!</p>
+                        </div>
+                        <div class="auth-form__group">
+                            <label for="" class="auth-form__label">Email</label>
+                            <input name="email"  type="text" th:value="${user.email}" class="auth-form__input">
+                        </div>
+                        <div class="auth-form__group">
+                            <label for="" class="auth-form__label">Mật Khẩu</label>
+                            <input name="password" type="password" th:value="${user.password}" class="auth-form__input">
+                            <p style="color:red"  th:if="${#fields.hasErrors('password')}" >Không được để trống Password!</p>
+                        </div>
+                        <div class="auth-form__group">
+                            <label for="" class="auth-form__label">Xác Nhận Mật Khẩu</label>
+                            <input type="password" class="auth-form__input auth-form--confirmpw">
+                        </div>
+                    </form>
+					
+					<p th:text="${errorregister!=null ? errorregister:'' }" class="errorregister" style="padding:5px 5px;color:red"></p>
+					<p th:text="${successregister!=null ? successregister:'' }" style="padding:5px 5px;color:green"></p>
+                    
+                    <div class="auth-form__modifier">
+                        <p class="auth-form__policy-text">
+                            Bằng việc đăng kí, bạn chấp thuận với 
+                            <a class="auth-form__text-link" href="">điều khoản dịch vụ</a>
+                            &
+                            <a class="auth-form__text-link" href="">chính sách bảo mật</a>
+                        </p> 
+                    </div>
+
+                    <div class="auth-form__controls">
+                        <div class="btn btn--comeback">TRỞ LẠI</div>
+                        <div onclick="checkRegister()" class="btn btn--primary">ĐĂNG KÝ</div>
+                    </div>
+                </div>
+
+                <div class="auth-form__socials">
+                    <a href="" class="btn btn--with-icon btn-fb">
+                        <img  width="13%" src="./assets/img/facebookimg.png" alt="">
+                        <span style="padding: 0px 30px;">Kết nối facebook</span>
+                    </a>
+                    <a href="" class="btn btn--with-icon btn-gg">
+                        <img width="11%" src="./assets/img/googleimg.png" alt="">
+                        <span style="padding: 0px 30px;">Kết nối google</span>
+                    </a>
+                </div>
+            </div>
+            <!-- đăng nhập -->
+            <div th:class="'auth-form  auth-form--login '+ ${errorloginVal!=null || errorlogin!=null ? 'open':''}">
+                <div class="auth-form__container">
+                    <div class="auth-form__header">
+                        <h3 class="auth-form__heading">
+                            Đăng nhập
+                        </h3>
+                        <span class="auth-form__switch-btn">
+                            Đăng ký
+                        </span>
+                    </div>
+
+                    <form th:object="${user}" action="login" method="post" class="auth-form__form">
+                        <div class="auth-form__group">
+                            <label for="" class="auth-form__label">Tên Đăng Nhập</label>
+                            <input name="username" type="text" th:value="*{username}" required title="Vui lòng không để trống" class="auth-form__input">
+                            <p style="color:red"  th:if="${#fields.hasErrors('username')}" >Không được để trống Username!</p>
+                        </div>
+                        <div class="auth-form__group">
+                            <label for="" class="auth-form__label">Mật Khẩu</label>
+                            <input name="password" type="password" th:value="*{password}" required minlength="3" title="Nhập ít nhất 3 kí tự" class="auth-form__input">
+                            <p style="color:red"  th:if="${#fields.hasErrors('password')}" >Không được để trống Password!</p>                           
+                        </div>
+                        <input hidden id="submitlogin" type="submit" value="submit">
+                    </form>
+					<p th:if="${errorlogin!=null }" th:text="${errorlogin }" style="padding:5px 5px;color:red"></p>
+                    <div class="auth-form__modifier">
+                        <div class="auth-form__help">
+                            <a href="" class="auth-form__help-link auth-form__help-forgot">Quên mật khẩu</a>
+                            <span class="auth-form__help-separate"></span>
+                            <a href="" class="auth-form__help-link">Trợ giúp</a>
+                            
+                        </div> 
+                    </div>
+
+                    <div class="auth-form__controls">
+                        <div class="btn btn--comeback">TRỞ LẠI</div>
+<!--                         <label for="submitlogin" class="btn btn--primary">ĐĂNG NHẬP</label>
+ -->                    <div onclick="document.querySelector('.auth-form--login form').submit()" class="btn btn--primary">ĐĂNG NHẬP</div> 
+                    </div>
+                </div>
+
+                <div class="auth-form__socials">
+                    <a href="" class="btn btn--with-icon btn-fb">
+                        <img  width="13%" src="./assets/img/facebookimg.png" alt="">
+                        <span style="padding: 0px 30px; ">Kết nối facebook</span>
+                    </a>
+                    <a href="" class="btn btn--with-icon btn-gg">
+                        <img width="11%" src="./assets/img/googleimg.png" alt="">
+                        <span style="padding: 0px 30px;">Kết nối google</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
